@@ -32,7 +32,6 @@
         "properties": {
             "top": {"type": "number"},
             "boost": {"type": "number"},
-            "height": {"type": "number"}
         },
         "required": ["top", "boost"]
     }
