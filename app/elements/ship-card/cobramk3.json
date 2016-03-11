@@ -1,0 +1,18 @@
+{
+  "name": "Cobra MkIII",
+  "images": {
+      "schematic": "../ship/CobraMk3/Schematic.png",
+      "thumbnail": "../ship/CobraMk3/Thumb.png"
+  },
+  "price": 379718,
+  "insurance": 18985,
+  "dimensions": {
+          "length": 27.1,
+          "width": 44.0,
+          "height": 7.9
+  },
+  "speed": {
+    "top": 286,
+    "boost": 408,
+  }
+}
