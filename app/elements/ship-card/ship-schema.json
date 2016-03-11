@@ -5,6 +5,13 @@
 		"name": {
 			"type": "string"
 		},
+		"images": {
+			"type": "object",
+			"properties": {
+				"schematic": {"type": "string"},
+				"thumbnail": {"type": "string"}
+			}
+		},
 		"price": {
 			"type": "number"
 		},
