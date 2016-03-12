@@ -11,28 +11,97 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 <link rel="import" href="..\..\bower_components/paper-material/paper-material.html">
 <link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\..\bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="..\..\bower_components/iron-image/iron-image.html">
+<link rel="import" href="..\..\bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/fade-out-animation.html">
 
 <dom-module id="Ship-Card">
   <template>
-    <style>
+    <style is="custom-style">
       :host {
         display: block;
       }
+      .root {
+        @apply(--layout-horizontal);
+        margin: 10px;
+        padding: 15px;
+        height: 400px;
+      }
+      .thumbnail {
+        width: 640px;
+        height: auto;
+        background-color: lightgray;
+      }
+
+      .schematic {
+        width: 1280px;
+        height: 720px;
+        background-color: lightgray;
+      }
+      .details {
+        margin: inherit;
+        padding: 10px;
+      }
+
     </style>
-    <div>Hello from <span>{{ship.foo}}</span></div>
-    <img src='{{ship.img}}'></img>
+    <iron-ajax
+          id="ajax"
+          url=""
+          handle-as="json"
+          on-response="hresponse"
+          debounce-duration="300">
+    </iron-ajax>
+    <paper-material class="root" elevation="1">
+      <iron-image elevation="1" class="thumbnail"  sizing="cover" preload src="{{ship.images.thumbnail}}"></iron-image>
+      <paper-material class="details" elevation="1">
+          <h1>{{ship.name}}</h1>
+          <ul>
+            <li><h3>Price: {{ship.price}} CR</h3></li>
+            <li><h3>Insurance deductible: {{ship.insurance}} CR</h3></li>
+            <li><h3>Dimensions:</h3></li>
+            <ul>
+              <li><h4>Length: {{ship.dimensions.length}} m</h4></li>
+              <li><h4>Width: {{ship.dimensions.width}} m</h4></li>
+              <li><h4>Height: {{ship.dimensions.height}} m</h4></li>
+            </ul>
+          </ul>
+          <paper-button onclick="showDialog()" raised>Schematics</paper-button>
+      </paper-material>
+
+    </paper-material>
+
+    <paper-dialog id="schematicDialog" entry-animation="scale-up-animation"
+              exit-animation="fade-out-animation">
+              <iron-image class="schematic" src="{{ship.images.schematic}}" preload sizing="cover"></iron-image>
+            </paper-dialog>
+
   </template>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
-  <script src="..\..\bower_components/jquerydist/jquery.min.js"></script>
-  
+  <script>
+  function showDialog() {
+    var dialog = document.getElementById('schematicDialog');
+    var test = dialog.opened;
+    if (dialog) {
+      dialog.toggle();
+    }
+  }
+  </script>
   <script>
   (function() {
     'use strict';
-
     Polymer({
       is: 'Ship-Card',
-      ready : function () {
-        this.ship = JSON.parse('{"foo": "David","img":"https://www.polymer-project.org/images/logos/lockup.svg"}')
+      ready: function() {
+        this.setajax();
+      },
+      setajax: function () {
+        this.$.ajax.url = this.url;
+        this.$.ajax.generateRequest();
+      },
+      hresponse: function(request) {
+        this.ship = this.$.ajax.lastResponse;
       },
       properties: {
         url: String,
