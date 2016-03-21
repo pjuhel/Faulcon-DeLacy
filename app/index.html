@@ -16,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="generator" content="Polymer Starter Kit">
-  <title>Polymer Starter Kit</title>
+  <title>Faulcon Delacy</title>
 
   <!-- Place favicon.ico in the `app/` directory -->
 
@@ -100,12 +100,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <!-- Application name -->
           <div class="middle middle-container">
-            <div class="app-name">Polymer Starter Kit</div>
+            <iron-image src=".\images\FaulconDelacy.png" sizing="contain"></iron-image>
+            <div class="app-name">Faulcon Delacy</div>
           </div>
 
           <!-- Application sub title -->
           <div class="bottom bottom-container">
-            <div class="bottom-title">The future of the web today</div>
+            <div class="bottom-title">- Ships manufacturer since 2762</div>
           </div>
         </paper-toolbar>
 
@@ -113,8 +114,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="content">
           <iron-pages attr-for-selected="data-route" selected="{{route}}">
             <section class="layout horizontal" data-route="home">
+              <ship-card url=".\elements\ship-card\sidewindermk1.json"></ship-card>
               <ship-card url=".\elements\ship-card\cobramk3.json"></ship-card>
               <ship-card url=".\elements\ship-card\vipermk3.json"></ship-card>
+              <ship-card url=".\elements\ship-card\python.json"></ship-card>
+              <ship-card url=".\elements\ship-card\anaconda.json"></ship-card>
             </section>
 
             <section data-route="legal">
