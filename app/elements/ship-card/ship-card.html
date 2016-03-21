@@ -11,34 +11,191 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
 <link rel="import" href="..\..\bower_components/paper-material/paper-material.html">
 <link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\..\bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="..\..\bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="..\..\bower_components/iron-image/iron-image.html">
+<link rel="import" href="..\..\bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="..\..\bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="..\..\bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="Ship-Card">
   <template>
-    <style>
+    <style include="iron-flex iron-flex-alignment" is="custom-style">
       :host {
         display: block;
       }
+      .root {
+        border-radius: 2px;
+        height: 100%;
+        padding: 16px 0 16px 0;
+        width: calc(98.66%);
+        margin: 16px auto;
+        background: white;
+      }
+      .thumbnail {
+        padding: 10px;
+        background-color: lightgray;
+        width: 640px;
+        height: 360px;
+      }
+      .schematic {
+        width: 1920px;
+        height: 1080px;
+        background-color: lightgray;
+      }
+      .details {
+        margin: inherit;
+        padding: inherit;
+        max-width: 640px;
+      }
+      .card-actions {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
+      .content-head {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+        @apply(--layout-center);
+
+      }
     </style>
-    <div>Hello from <span>{{ship.foo}}</span></div>
-    <img src='{{ship.img}}'></img>
+    <!-- Iron Ajax get the json used for the card. -->
+    <iron-ajax
+          id="ajax"
+          url=""
+          handle-as="json"
+          on-response="hresponse"
+          debounce-duration="300">
+    </iron-ajax>
+    <!-- Main Element -->
+    <paper-material class="root" elevation="2">
+      <paper-card image="{{ship.images.thumbnail}}" class="details" elevation="2">
+        <div class="card-content">
+          <div class="content-head" elevation="1">
+            <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
+            <h1 id="sectionTitle"></h1>
+            <paper-icon-button id="forward" icon="icons:arrow-forward" on-click="nextContent"></paper-icon-button>
+          </div>
+          <div id="sectionContent">
+            <p style="text-align: justify"></p>
+          </div>
+        </div>
+        <div class="card-actions">
+          <paper-button>
+            <iron-icon icon="icons:info"></iron-icon>
+            More info
+          </paper-button>
+          <paper-button on-click="showDialog">
+            <iron-icon icon="icons:description"></iron-icon>
+            Schematic
+          </paper-button>
+          <paper-button>
+            <iron-icon icon="icons:add-shopping-cart"></iron-icon>
+            Add to cart</paper-button>
+        </div>
+      </paper-card>
+    </paper-material>
+    <!-- Schematic Dialog -->
+    <paper-dialog id="schematicDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
+      <h2>{{ship.name}}'s schematic</h2>
+      <paper-dialog-scrollable>
+        <iron-image class="schematic" src="{{ship.images.schematic}}" preload sizing="cover"></iron-image>
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Close</paper-button>
+      </div>
+    </paper-dialog>
+    <!-- Details Dialog -->
+    <div hidden="hidden" id="sectionTab">
+      <div>
+        <h1 class="sectionTitle">{{ship.name}}</h1>
+        <div class="sectionContent">
+          <p style="text-align: justify">{{ship.description}}</p>
+        </div>
+      </div>
+      <div>
+        <h1 class="sectionTitle">Overview</h1>
+        <div class="sectionContent">
+          <ul>
+            <li><h3>Price: {{ship.price}} CR</h3></li>
+            <li><h3>Insurance deductible: {{ship.insurance}} CR</h3></li>
+            <li><h3>Dimensions:</h3></li>
+            <ul>
+              <li><h4>Length: {{ship.dimensions.length}} m</h4></li>
+              <li><h4>Width: {{ship.dimensions.width}} m</h4></li>
+              <li><h4>Height: {{ship.dimensions.height}} m</h4></li>
+            </ul>
+          </ul>
+        </div>
+      </div>
+    </div>
   </template>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
-  <script src="..\..\bower_components/jquerydist/jquery.min.js"></script>
-  
+
   <script>
   (function() {
     'use strict';
-
     Polymer({
       is: 'Ship-Card',
-      ready : function () {
-        this.ship = JSON.parse('{"foo": "David","img":"https://www.polymer-project.org/images/logos/lockup.svg"}')
+      ready: function() {
+        this.setajax();
+        this.selected=0;
+        this.updateContent();
+      },
+      setajax: function () {
+        this.$.ajax.url = this.url;
+        this.$.ajax.generateRequest();
+      },
+      hresponse: function(request) {
+        this.ship = this.$.ajax.lastResponse;
+        this.updateContent();
+      },
+      showDialog: function() {
+        var dialog = this.$.schematicDialog;
+        var test = dialog.opened;
+        if (dialog) {
+          dialog.toggle();
+        }
+      },
+      nextContent: function() {
+        this.selected++;
+        this.updateContent();
+      },
+      previousContent: function() {
+        this.selected--;
+        this.updateContent();
+      },
+      updateContent: function () {
+        //Disable back if at the end
+        if(this.selected>0) {
+          this.$.back.disabled=false;
+        }
+        else {
+          this.$.back.disabled=true;
+        }
+        //Disable forward if at the top
+        if(this.selected<this.$.sectionTab.children.length-1) {
+          this.$.forward.disabled=false;
+        }
+        else {
+          this.$.forward.disabled=true;
+        }
+        //Change content & section title
+        this.$.sectionTitle.innerHTML=this.$.sectionTab.children[this.selected].querySelector('h1').innerHTML;
+        this.$.sectionContent.innerHTML=this.$.sectionTab.children[this.selected].querySelector('div').innerHTML;
       },
       properties: {
         url: String,
         ship: {
           type: Object,
-          notify : true
+          notify: true
+        },
+        selected : {
+          type: Number,
+          notify: true
         }
       }
     });

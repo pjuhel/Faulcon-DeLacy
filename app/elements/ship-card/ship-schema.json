@@ -5,6 +5,16 @@
 		"name": {
 			"type": "string"
 		},
+		"description": {
+			"type": "string"
+		},
+		"images": {
+			"type": "object",
+			"properties": {
+				"schematic": {"type": "string"},
+				"thumbnail": {"type": "string"}
+			}
+		},
 		"price": {
 			"type": "number"
 		},
@@ -25,7 +35,6 @@
         "properties": {
             "top": {"type": "number"},
             "boost": {"type": "number"},
-            "height": {"type": "number"}
         },
         "required": ["top", "boost"]
     }
