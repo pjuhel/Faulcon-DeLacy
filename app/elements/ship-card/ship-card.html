@@ -19,7 +19,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="..\..\bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
 <link rel="import" href="..\..\bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/slide-right-animation.html">
 <link rel="import" href="..\..\bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="Ship-Card">
@@ -81,7 +83,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-icon-button id="forward" icon="icons:arrow-forward" on-click="nextContent"></paper-icon-button>
           </div>
           <div id="sectionContent">
-            <p style="text-align: justify"></p>
           </div>
         </div>
         <div class="card-actions">
@@ -140,10 +141,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     'use strict';
     Polymer({
       is: 'Ship-Card',
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
       ready: function() {
         this.setajax();
         this.selected=0;
         this.updateContent();
+        this.animation=false;
       },
       setajax: function () {
         this.$.ajax.url = this.url;
@@ -162,11 +167,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       nextContent: function() {
         this.selected++;
-        this.updateContent();
+        this.animation=true;
+        this.playAnimation('out');
+
       },
       previousContent: function() {
         this.selected--;
-        this.updateContent();
+        this.animation=true;
+        this.playAnimation('out');
       },
       updateContent: function () {
         //Disable back if at the end
@@ -188,14 +196,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.$.sectionContent.innerHTML=this.$.sectionTab.children[this.selected].querySelector('div').innerHTML;
       },
       properties: {
+        animationConfig: {
+          value: function() {
+            return {
+              // fade-in-animation is run with a 50ms delay from slide-down-animation
+              'out':
+              {
+                name: 'fade-out-animation',
+                node: this.$.sectionContent
+              },
+              'in':
+              {
+                name: 'fade-in-animation',
+                node: this.$.sectionContent
+              },
+            }
+          }
+        },
         url: String,
         ship: {
           type: Object,
           notify: true
         },
-        selected : {
+        selected: {
           type: Number,
           notify: true
+        },
+        animation: {
+          type: Boolean
+        }
+      },
+      listeners: {
+        'neon-animation-finish': '_onNeonAnimationFinish'
+      },
+      hide: function() {
+        // run fade-out-animation
+        this.playAnimation('exit');
+      },
+      _onNeonAnimationFinish: function() {
+        if (this.animation) {
+          this.updateContent();
+          this.playAnimation('in');
+          this.animation=false;
         }
       }
     });
