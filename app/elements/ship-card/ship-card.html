@@ -28,13 +28,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style include="iron-flex iron-flex-alignment" is="custom-style">
       :host {
-        display: block;
+        display: inline-block;
       }
       .root {
         border-radius: 2px;
         height: 100%;
         padding: 16px 0 16px 0;
         width: calc(98.66%);
+        max-width: 640px;
         margin: 16px auto;
         background: white;
       }
@@ -49,11 +50,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         height: 1080px;
         background-color: lightgray;
       }
-      .details {
-        margin: inherit;
-        padding: inherit;
-        max-width: 640px;
-      }
       .card-actions {
         @apply(--layout-horizontal);
         @apply(--layout-justified);
@@ -62,44 +58,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         @apply(--layout-horizontal);
         @apply(--layout-justified);
         @apply(--layout-center);
-
+      }
+      #sectionContent {
+        height: 200px;
+        overflow: auto;
       }
     </style>
-    <!-- Iron Ajax get the json used for the card. -->
-    <iron-ajax
-          id="ajax"
-          url=""
-          handle-as="json"
-          on-response="hresponse"
-          debounce-duration="300">
-    </iron-ajax>
     <!-- Main Element -->
-    <paper-material class="root" elevation="2">
-      <paper-card image="{{ship.images.thumbnail}}" class="details" elevation="2">
-        <div class="card-content">
-          <div class="content-head" elevation="1">
-            <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
-            <h1 id="sectionTitle"></h1>
-            <paper-icon-button id="forward" icon="icons:arrow-forward" on-click="nextContent"></paper-icon-button>
-          </div>
-          <div id="sectionContent">
-          </div>
+    <paper-card image="{{ship.images.thumbnail}}" class="root" elevation="2">
+      <div class="card-content">
+        <div class="content-head" elevation="1">
+          <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
+          <h1 id="sectionTitle"></h1>
+          <paper-icon-button id="forward" icon="icons:arrow-forward" on-click="nextContent"></paper-icon-button>
         </div>
-        <div class="card-actions">
-          <paper-button>
-            <iron-icon icon="icons:info"></iron-icon>
-            More info
-          </paper-button>
-          <paper-button on-click="showDialog">
-            <iron-icon icon="icons:description"></iron-icon>
-            Schematic
-          </paper-button>
-          <paper-button>
-            <iron-icon icon="icons:add-shopping-cart"></iron-icon>
-            Add to cart</paper-button>
+        <div id="sectionContent" elevation="0">
         </div>
-      </paper-card>
-    </paper-material>
+      </div>
+      <div class="card-actions">
+        <paper-button>
+          <iron-icon icon="icons:info"></iron-icon>
+          More info
+        </paper-button>
+        <paper-button on-click="showDialog">
+          <iron-icon icon="icons:description"></iron-icon>
+          Schematic
+        </paper-button>
+        <paper-button>
+          <iron-icon icon="icons:add-shopping-cart"></iron-icon>
+          Add to cart</paper-button>
+      </div>
+    </paper-card>
     <!-- Schematic Dialog -->
     <paper-dialog id="schematicDialog" entry-animation="scale-up-animation" exit-animation="fade-out-animation">
       <h2>{{ship.name}}'s schematic</h2>
@@ -134,6 +123,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </div>
     </div>
+    <!-- Iron Ajax get the json used for the card. -->
+    <iron-ajax
+          id="ajax"
+          url=""
+          handle-as="json"
+          on-response="hresponse"
+          debounce-duration="300">
+    </iron-ajax>
   </template>
 
   <script>
