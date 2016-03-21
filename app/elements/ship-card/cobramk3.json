@@ -1,5 +1,6 @@
 {
   "name": "Cobra MkIII",
+  "description" : "The Cobra MkIII is a classic all purpose ship found throughout human space. The model was first built in Lave Cowell & MgRath shipyard in Lave in 3100. Despite its age it remains a popular ship for lone pilots who value its balance of carrying capacity and ability in combat.",
   "images": {
       "schematic": "../ship/CobraMk3/Schematic.png",
       "thumbnail": "../ship/CobraMk3/Thumb.png"
