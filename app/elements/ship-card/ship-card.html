@@ -86,7 +86,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </paper-button>
         <paper-button>
           <iron-icon icon="icons:add-shopping-cart"></iron-icon>
-          Add to cart</paper-button>
+          Add to cart
+        </paper-button>
       </div>
     </paper-card>
     <!-- Schematic Dialog -->
@@ -153,6 +154,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
       hresponse: function(request) {
         this.ship = this.$.ajax.lastResponse;
+        this.params.ship = this.ship;
+        this.continueValue=JSON.stringify(this.params);
         this.updateContent();
       },
       showDialog: function() {
@@ -221,6 +224,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         animation: {
           type: Boolean
+        },
+        params: {
+          type: Object,
+          notify: true,
+          value: {}
+        },
+        continueValue: {
+          type: String
         }
       },
       listeners: {
