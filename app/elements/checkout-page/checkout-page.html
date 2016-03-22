@@ -7,17 +7,53 @@ The complete set of contributors may be found at http://polymer.github.io/CONTRI
 Code distributed by Google as part of the polymer project is also
 subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
 -->
-
+<script src="//cdnjs.cloudflare.com/ajax/libs/json3/3.3.2/json3.min.js"></script>
 <link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/iron-list/iron-list.html">
+<link rel="import" href="..\..\bower_components/iron-collapse/iron-collapse.html">
+<link rel="import" href="..\..\bower_components/paper-material/paper-material.html">
+<link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
 <dom-module id="checkout-page">
   <template>
+    <style include="iron-flex iron-flex-alignment"/>
     <style>
       :host {
         display: block;
       }
+      .accessories {
+        margin: inherit;
+        padding: inherit;
+      }
+      #list {
+        max-height: 200px;
+      }
+      .card-actions {
+        @apply(--layout-horizontal);
+        @apply(--layout-justified);
+      }
     </style>
-    <div>Hello from <span>{{foo}}</span></div>
+    <paper-card image="{{json.ship.images.thumbnail}}" elevation="2">
+      <div class="card-content">
+        <h2>Checkout</h2>
+        <h3>{{json.ship.name}}'s base price: <span>{{json.ship.price}}</span> Cr</h3>
+        <hr/>
+        <h3>Accessories:</h3>
+        <iron-list id="list" items="[[json.accessories]]" as="item">
+          <template>
+            <paper-material class="layout horizontal" elevation="0">
+              <h4>{{item.name}}:<h4><h5><span>{{item.price}}</span> Cr</h5>
+            </paper-material>
+          </template>
+        </iron-list>
+        <h3>Total:</h3>
+      </div>
+      <div class="card-actions">
+        <h2>Grand Total : 50000000 CR</h2><div> <paper-button raised>Pay</paper-button></div>
+      </div>
+    </paper-card>
   </template>
   <script>
   (function() {
@@ -26,10 +62,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'checkout-page',
 
+      ready: function() {
+        this.json=JSON.parse(this.input);
+        this.$.list.assignParentResizable(this.$.accessories);
+      },
+      accessoriesToggle: function() {
+        this.$.accessories.toggle();
+        document.querySelector('iron-list').fire('iron-resize');
+      },
       properties: {
-        foo: {
+        input: {
           type: String,
-          value: 'checkout-page',
+          notify: true,
+          value : '{"ship": { "name": "Cobra MkIII", "description" : "The Cobra MkIII is a classic all purpose ship found throughout human space. The model was first built in Lave Cowell & MgRath shipyard in Lave in 3100. Despite its age it remains a popular ship for lone pilots who value its balance of carrying capacity and ability in combat.", "images": { "schematic": "../ship/CobraMk3/Schematic.png", "thumbnail": "../ship/CobraMk3/Thumb.png" }, "price": 379718, "insurance": 18985, "dimensions": { "length": 27.1, "width": 44.0, "height": 7.9 }, "speed": { "top": 286, "boost": 408 } },"accessories":[ {"name": "Shield","price": 424242}]}'
+        },
+        json: {
+          type: Object,
           notify: true
         }
       }
