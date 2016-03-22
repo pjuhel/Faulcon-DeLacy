@@ -16,6 +16,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
 <link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="..\..\bower_components/polymer-cookie/polymer-cookie.html">
+
 <dom-module id="checkout-page">
   <template>
     <style include="iron-flex iron-flex-alignment"/>
@@ -54,6 +56,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <h2>Grand Total : {{total.grand}} CR</h2><div> <paper-button raised>Pay</paper-button></div>
       </div>
     </paper-card>
+    <polymer-cookie
+      id="order_cookie"
+      name="order_cookie"
+      time=2
+      format="h">
+    </polymer-cookie>
   </template>
   <script>
   (function() {
@@ -62,15 +70,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer({
       is: 'checkout-page',
 
-      ready: function() {
-        this.json=JSON.parse(this.input);
-        this.$.list.assignParentResizable(this.$.accessories);
-        for (var i = 0; i < this.json.accessories.length; i++) {
-          this.total.accessories+=this.json.accessories[i].price;
+      attached: function() {
+        var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+        this.input = cookie.readCookie();
+        if (this.input!="") {
+          this.json=JSON.parse(this.input);
+          this.$.list.assignParentResizable(this.$.accessories);
+          for (var i = 0; i < this.json.accessories.length; i++) {
+            this.total.accessories+=this.json.accessories[i].price;
+          }
+          this.notifyPath('total.accessories', this.total.accessories);
+          this.total.grand=this.json.ship.price+this.total.accessories;
+          this.notifyPath('total.grand', this.total.grand);
         }
-        this.notifyPath('total.accessories', this.total.accessories);
-        this.total.grand=this.json.ship.price+this.total.accessories;
-        this.notifyPath('total.grand', this.total.grand);
       },
       accessoriesToggle: function() {
         this.$.accessories.toggle();

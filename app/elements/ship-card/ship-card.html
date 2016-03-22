@@ -24,6 +24,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/neon-animation/animations/fade-in-animation.html">
 <link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
 
+<link rel="import" href="..\..\bower_components/polymer-cookie/polymer-cookie.html">
+
 <dom-module id="Ship-Card">
   <template>
     <style include="iron-flex iron-flex-alignment" is="custom-style">
@@ -84,7 +86,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-icon icon="icons:description"></iron-icon>
           Schematic
         </paper-button>
-        <paper-button>
+        <paper-button on-click="addToCart">
           <iron-icon icon="icons:add-shopping-cart"></iron-icon>
           Add to cart
         </paper-button>
@@ -132,6 +134,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           on-response="hresponse"
           debounce-duration="300">
     </iron-ajax>
+    <polymer-cookie
+      id="order_cookie"
+      name="order_cookie"
+      time=2
+      format="h">
+    </polymer-cookie>
   </template>
 
   <script>
@@ -148,14 +156,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         this.updateContent();
         this.animation=false;
       },
+      addToCart: function () {
+        var params = {};
+        params.ship = this.ship;
+        params.accessories = [];
+        var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+        cookie.value=JSON.stringify(params);
+        cookie.createCookie();
+        document.location.href = app.baseUrl+"checkout";
+      },
       setajax: function () {
         this.$.ajax.url = this.url;
         this.$.ajax.generateRequest();
       },
       hresponse: function(request) {
         this.ship = this.$.ajax.lastResponse;
-        this.params.ship = this.ship;
-        this.continueValue=JSON.stringify(this.params);
         this.updateContent();
       },
       showDialog: function() {
@@ -229,9 +244,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           type: Object,
           notify: true,
           value: {}
-        },
-        continueValue: {
-          type: String
         }
       },
       listeners: {

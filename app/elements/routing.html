@@ -49,8 +49,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       app.route = 'legal';
     });
 
-    page('/checkout', function(data) {
-      app.params = data.params;
+    page('/checkout', function() {
+      app.route = 'checkout';
     });
 
     // 404
