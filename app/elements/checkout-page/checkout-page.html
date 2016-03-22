@@ -48,10 +48,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </template>
         </iron-list>
-        <h3>Total:</h3>
+        <h3>Total: {{total.accessories}}</h3>
       </div>
       <div class="card-actions">
-        <h2>Grand Total : 50000000 CR</h2><div> <paper-button raised>Pay</paper-button></div>
+        <h2>Grand Total : {{total.grand}} CR</h2><div> <paper-button raised>Pay</paper-button></div>
       </div>
     </paper-card>
   </template>
@@ -65,6 +65,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       ready: function() {
         this.json=JSON.parse(this.input);
         this.$.list.assignParentResizable(this.$.accessories);
+        for (var i = 0; i < this.json.accessories.length; i++) {
+          this.total.accessories+=this.json.accessories[i].price;
+        }
+        this.notifyPath('total.accessories', this.total.accessories);
+        this.total.grand=this.json.ship.price+this.total.accessories;
+        this.notifyPath('total.grand', this.total.grand);
       },
       accessoriesToggle: function() {
         this.$.accessories.toggle();
@@ -79,6 +85,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         json: {
           type: Object,
           notify: true
+        },
+        total: {
+          type: Object,
+          notify: true,
+          value: {
+            "accessories":0,
+            "grand":0
+          }
         }
       }
     });
