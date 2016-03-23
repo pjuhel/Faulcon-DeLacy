@@ -20406,7 +20406,7 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
       }
     </style>
     
-    <paper-card image="{{ship.images.thumbnail}}" class="root" elevation="2">
+    <paper-card image="{{app.baseUrl}}{{ship.images.thumbnail}}" class="root" elevation="2">
       <div class="card-content">
         <div class="content-head" elevation="1">
           <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
@@ -20601,11 +20601,11 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
         display: block;
       }
     </style>
-    <ship-card url="..\data\ship\sidewindermk1.json"></ship-card>
-    <ship-card url="..\data\ship\cobramk3.json"></ship-card>
-    <ship-card url="..\data\ship\vipermk3.json"></ship-card>
-    <ship-card url="..\data\ship\python.json"></ship-card>
-    <ship-card url="..\data\ship\anaconda.json"></ship-card>
+    <ship-card url="data\ship\sidewindermk1.json"></ship-card>
+    <ship-card url="data\ship\cobramk3.json"></ship-card>
+    <ship-card url="data\ship\vipermk3.json"></ship-card>
+    <ship-card url="data\ship\python.json"></ship-card>
+    <ship-card url="data\ship\anaconda.json"></ship-card>
   </template>
   <script>
   (function() {
