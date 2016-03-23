@@ -1,0 +1,19 @@
+{
+  "name": "Sidewinder MkI",
+  "description" : "Most pilots start their careers in the Sidewinder. It is a classic ship design that has been in use (in various configurations) since 2982. Its original design was a light support ship and it lacked jump capability. Modern compact drives have enabled jump-capable versions to be created, making this a useful all rounder. Some navies still use these ships as fighters and patrol craft.",
+  "images": {
+      "schematic": "../images/ship/SidewinderMkI/Schematic.png",
+      "thumbnail": "../images/ship/SidewinderMkI/Thumb.png"
+  },
+  "price": 32000,
+  "insurance": 1600,
+  "dimensions": {
+          "length": 14.9,
+          "width": 21.3,
+          "height": 5.4
+  },
+  "speed": {
+    "top": 220,
+    "boost": 321
+  }
+}
