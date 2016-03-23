@@ -2,8 +2,8 @@
   "name": "Python",
   "description" : "Another classic design that has survived the centuries. The first vessel was constructed in 2700 by Whatt and Pritney Ship Constructions. With the demise of the company and after various mergers and takeovers the ship design is now owned by Faulcon deLacy. The ship remains the slow and sturdy craft it was originally famous for and some smaller navies still use this class as a patrol cruiser (although tiny compared to the Imperial Interdictors and Federal Battle cruisers).",
   "images": {
-      "schematic": "../images/ship/Python/Schematic.png",
-      "thumbnail": "../images/ship/Python/Thumb.png"
+      "schematic": "images/ship/Python/Schematic.png",
+      "thumbnail": "images/ship/Python/Thumb.png"
   },
   "price": 56978180,
   "insurance": 2848909,
