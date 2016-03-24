@@ -14,6 +14,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
 <link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
 <link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="..\..\bower_components/iron-meta/iron-meta.html">
 
 <link rel="import" href="..\..\bower_components/polymer-cookie/polymer-cookie.html">
 
@@ -68,8 +69,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     Polymer({
       is: 'checkout-page',
-
-      attached: function() {
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
+      ready: function() {
         var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
         this.input = cookie.readCookie();
         if (this.input!="") {
@@ -103,9 +106,33 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           value: {
             "accessories":0,
             "grand":0
-          }
+          },
+        },
+        checkoutUpdated: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          observer: '_checkoutUpdatedChanged'
         }
-      }
+      },
+      _checkoutUpdatedChanged: function(newValue, oldValue) {
+        if(newValue)
+        {
+          var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+          this.input = cookie.readCookie();
+          if (this.input!="") {
+            this.json=JSON.parse(this.input);
+            this.$.list.assignParentResizable(this.$.accessories);
+            for (var i = 0; i < this.json.accessories.length; i++) {
+              this.total.accessories+=this.json.accessories[i].price;
+            }
+            this.notifyPath('total.accessories', this.total.accessories);
+            this.total.grand=this.json.ship.price+this.total.accessories;
+            this.notifyPath('total.grand', this.total.grand);
+          }
+          this.checkout=false;
+        }
+      },
     });
   })();
   </script>

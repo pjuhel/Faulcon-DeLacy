@@ -86,10 +86,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <iron-icon icon="icons:description"></iron-icon>
           Schematic
         </paper-button>
+
         <paper-button on-click="addToCart">
           <iron-icon icon="icons:add-shopping-cart"></iron-icon>
           Add to cart
         </paper-button>
+
       </div>
     </paper-card>
     <!-- Schematic Dialog -->
@@ -141,7 +143,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       format="h">
     </polymer-cookie>
   </template>
-
   <script>
   (function() {
     'use strict';
@@ -160,10 +161,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         var params = {};
         params.ship = this.ship;
         params.accessories = [];
+        app.checkout=params;
         var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
         cookie.value=JSON.stringify(params);
         cookie.createCookie();
-        document.location.href = app.baseUrl+"checkout";
+        document.location.assign(app.baseUrl+"checkout")
       },
       setajax: function () {
         this.$.ajax.url = this.url;
@@ -239,11 +241,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
         animation: {
           type: Boolean
-        },
-        params: {
-          type: Object,
-          notify: true,
-          value: {}
         }
       },
       listeners: {
