@@ -20462,7 +20462,7 @@ It will also ensure that focus remains in the dialog.
         var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
         cookie.value=JSON.stringify(params);
         cookie.createCookie();
-        document.location.assign(app.baseUrl+"checkout")
+        document.location.assign(app.baseUrl+"checkout");
       },
       setajax: function () {
         this.$.ajax.url = this.url;
