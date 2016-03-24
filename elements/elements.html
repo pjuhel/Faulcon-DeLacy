@@ -16958,7 +16958,7 @@ module.exports = Array.isArray || function (arr) {
 
     // add #! before urls
     page({
-      hashbang: true
+      hashbang: false
     });
 
   });
@@ -19354,8 +19354,6 @@ to override this attribute with `role="alertdialog"`.
 If `modal` is set, the element will set `aria-modal` and prevent the focus from exiting the element.
 It will also ensure that focus remains in the dialog.
 
-The `aria-labelledby` attribute will be set to the header element, if one exists.
-
 @hero hero.svg
 @demo demo/index.html
 @polymerBehavior Polymer.PaperDialogBehavior
@@ -19395,16 +19393,6 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
       this.__prevWithBackdrop = this.withBackdrop;
     },
 
-    attached: function() {
-      // this._observer is used by iron-overlay-behavior
-      this._ariaObserver = Polymer.dom(this).observeNodes(this._updateAriaLabelledBy);
-      this._updateAriaLabelledBy();
-    },
-
-    detached: function() {
-      Polymer.dom(this).unobserveNodes(this._ariaObserver);
-    },
-
     _modalChanged: function(modal, readied) {
       if (modal) {
         this.setAttribute('aria-modal', 'true');
@@ -19434,27 +19422,6 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
           this.__prevNoCancelOnEscKey;
         this.withBackdrop = this.withBackdrop && this.__prevWithBackdrop;
       }
-    },
-
-    _updateAriaLabelledBy: function() {
-      var header = Polymer.dom(this).querySelector('h2');
-      if (!header) {
-        this.removeAttribute('aria-labelledby');
-        return;
-      }
-      var headerId = header.getAttribute('id');
-      if (headerId && this.getAttribute('aria-labelledby') === headerId) {
-        return;
-      }
-      // set aria-describedBy to the header element
-      var labelledById;
-      if (headerId) {
-        labelledById = headerId;
-      } else {
-        labelledById = 'paper-dialog-header-' + new Date().getUTCMilliseconds();
-        header.setAttribute('id', labelledById);
-      }
-      this.setAttribute('aria-labelledby', labelledById);
     },
 
     _updateClosingReasonConfirmed: function(confirmed) {
@@ -20406,7 +20373,7 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
       }
     </style>
     
-    <paper-card image="{{app.baseUrl}}{{ship.images.thumbnail}}" class="root" elevation="2">
+    <paper-card image="{{ship.images.thumbnail}}" class="root" elevation="2">
       <div class="card-content">
         <div class="content-head" elevation="1">
           <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
@@ -20425,10 +20392,12 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
           <iron-icon icon="icons:description"></iron-icon>
           Schematic
         </paper-button>
+
         <paper-button on-click="addToCart">
           <iron-icon icon="icons:add-shopping-cart"></iron-icon>
           Add to cart
         </paper-button>
+
       </div>
     </paper-card>
     
@@ -20471,7 +20440,6 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
     <polymer-cookie id="order_cookie" name="order_cookie" time="2" format="h">
     </polymer-cookie>
   </template>
-
   <script>
   (function() {
     'use strict';
@@ -20490,10 +20458,11 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
         var params = {};
         params.ship = this.ship;
         params.accessories = [];
+        app.checkout=params;
         var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
         cookie.value=JSON.stringify(params);
         cookie.createCookie();
-        document.location.href = app.baseUrl+"checkout";
+        document.location.assign(app.baseUrl+"checkout")
       },
       setajax: function () {
         this.$.ajax.url = this.url;
@@ -20569,11 +20538,6 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
         },
         animation: {
           type: Boolean
-        },
-        params: {
-          type: Object,
-          notify: true,
-          value: {}
         }
       },
       listeners: {
@@ -20601,11 +20565,11 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
         display: block;
       }
     </style>
-    <ship-card url="..\data\ship\sidewindermk1.json"></ship-card>
-    <ship-card url="..\data\ship\cobramk3.json"></ship-card>
-    <ship-card url="..\data\ship\vipermk3.json"></ship-card>
-    <ship-card url="..\data\ship\python.json"></ship-card>
-    <ship-card url="..\data\ship\anaconda.json"></ship-card>
+    <ship-card url="{{app.baseUrl}}data\ship\sidewindermk1.json"></ship-card>
+    <ship-card url="{{app.baseUrl}}data\ship\cobramk3.json"></ship-card>
+    <ship-card url="{{app.baseUrl}}data\ship\vipermk3.json"></ship-card>
+    <ship-card url="{{app.baseUrl}}data\ship\python.json"></ship-card>
+    <ship-card url="{{app.baseUrl}}data\ship\anaconda.json"></ship-card>
   </template>
   <script>
   (function() {
@@ -22544,8 +22508,10 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
 
     Polymer({
       is: 'checkout-page',
-
-      attached: function() {
+      behaviors: [
+        Polymer.NeonAnimationRunnerBehavior
+      ],
+      ready: function() {
         var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
         this.input = cookie.readCookie();
         if (this.input!="") {
@@ -22579,9 +22545,33 @@ The `aria-labelledby` attribute will be set to the header element, if one exists
           value: {
             "accessories":0,
             "grand":0
-          }
+          },
+        },
+        checkoutUpdated: {
+          type: Boolean,
+          value: false,
+          notify: true,
+          observer: '_checkoutUpdatedChanged'
         }
-      }
+      },
+      _checkoutUpdatedChanged: function(newValue, oldValue) {
+        if(newValue)
+        {
+          var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+          this.input = cookie.readCookie();
+          if (this.input!="") {
+            this.json=JSON.parse(this.input);
+            this.$.list.assignParentResizable(this.$.accessories);
+            for (var i = 0; i < this.json.accessories.length; i++) {
+              this.total.accessories+=this.json.accessories[i].price;
+            }
+            this.notifyPath('total.accessories', this.total.accessories);
+            this.total.grand=this.json.ship.price+this.total.accessories;
+            this.notifyPath('total.grand', this.total.grand);
+          }
+          this.checkout=false;
+        }
+      },
     });
   })();
   </script>
