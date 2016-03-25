@@ -1,0 +1,8 @@
+{
+  "name": "Faction Paintjob",
+  "description" : "Prove your allegiance to your faction through this Faction Paintjob !",
+  "images": {
+    "thumbnail": "../../images/ship/Python/paintjob1.png"
+  },
+  "price": 10000
+}

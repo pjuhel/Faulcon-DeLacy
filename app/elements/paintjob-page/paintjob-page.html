@@ -1,0 +1,101 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/polymer-cookie/polymer-cookie.html">
+<link rel="import" href="..\paintjob-card/paintjob-card.html">
+<dom-module id="paintjob-page">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+    </style>
+    <div id="sectionCard" elevation="0">
+      <paintjob-card url="{{app.baseUrl}}data\paintjob\anaconda\paintjob1.json"></paintjob-card>
+      <paintjob-card url="{{app.baseUrl}}data\paintjob\anaconda\paintjob2.json"></paintjob-card>
+      <paintjob-card url="{{app.baseUrl}}data\paintjob\anaconda\paintjob3.json"></paintjob-card>
+      <paintjob-card url="{{app.baseUrl}}data\paintjob\anaconda\paintjob4.json"></paintjob-card>
+    </div>
+<!--    <template  id=sectionContent is="dom-repeat" items="{{urls}}">     I tried to implement a responsive UI which can be updated after its first generation
+      <div>                                                                However i didn't find the way in polymer to reload those element when I update their URL,
+        <paintjob-card url="{{urls.value}}"></paintjob-card>               or they update by destroying their url param in the same time, resulting in blank card on the UI
+      </div>
+    </template>
+-->
+    <polymer-cookie
+      id="order_cookie"
+      name="order_cookie"
+      time=2
+      format="h">
+    </polymer-cookie>
+
+  </template>
+  <script>
+  (function() {
+    'use strict';
+
+    Polymer({
+      is: 'paintjob-page',
+      ready: function() {
+        var cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+        this.input = cookie.readCookie();
+        if (this.input!="") {
+          this.json=JSON.parse(this.input);
+          }
+          if(this.json.ship.name == "Cobra MkIII") this.ship = "cobramk3";
+          if(this.json.ship.name == "Sidewinder MkI") this.ship = "sidewindermk1";
+          if(this.json.ship.name == "Anaconda") this.ship = "anaconda";
+          if(this.json.ship.name == "Python") this.ship = "python";
+          if(this.json.ship.name == "Viper MkIII") this.ship = "vipermk3";
+//          this.updateContent();
+
+      },
+      updateContent: function () {
+        //Change the url depending of the choosen ships ( default = anacondas)
+        for(var i =1; i < 5; i++)
+        {
+          this.url ="{{app.baseUrl}}data\\paintjob\\"+this.ship+"\\paintjob"+i+".json";
+          this.urls[i-1].url = this.url;
+        }
+      },
+      properties: {
+        input: {
+          type: String,
+          notify: true,
+          value : '{"ship": { "name": "Cobra MkIII", "description" : "The Cobra MkIII is a classic all purpose ship found throughout human space. The model was first built in Lave Cowell & MgRath shipyard in Lave in 3100. Despite its age it remains a popular ship for lone pilots who value its balance of carrying capacity and ability in combat.", "images": { "schematic": "../ship/CobraMk3/Schematic.png", "thumbnail": "../ship/CobraMk3/Thumb.png" }, "price": 379718, "insurance": 18985, "dimensions": { "length": 27.1, "width": 44.0, "height": 7.9 }, "speed": { "top": 286, "boost": 408 } },"accessories":[ {"name": "Shield","price": 424242}]}'
+        },
+        json: {
+          type: Object,
+          notify: true
+        },
+        ship: {
+          type: String,
+          notify: true
+        },
+        url: {
+          type: String,
+          notify : true
+        },
+        urls: { // Store the 4 urls needed to link the proper paintjob
+          type: Array,
+          notify: true,
+          value: [
+            {url:'{{app.baseUrl}}data\\paintjob\\anaconda\\paintjob1.json'},
+            {url:'{{app.baseUrl}}data\\paintjob\\anaconda\\paintjob2.json'},
+            {url:'{{app.baseUrl}}data\\paintjob\\anaconda\\paintjob3.json'},
+            {url:'{{app.baseUrl}}data\\paintjob\\anaconda\\paintjob4.json'}
+          ],
+        },
+      }
+    });
+  })();
+  </script>
+</dom-module>

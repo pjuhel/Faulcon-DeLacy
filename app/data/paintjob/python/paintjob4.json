@@ -1,0 +1,8 @@
+{
+  "name": "Vibrant Paintjob",
+  "description" : "Shine in the milky way with those vibrant paintjob !",
+  "images": {
+    "thumbnail": "../../images/ship/Python/paintjob4.png"
+  },
+  "price": 60000
+}

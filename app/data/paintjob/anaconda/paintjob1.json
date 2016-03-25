@@ -1,0 +1,8 @@
+{
+  "name": "Gold Paintjob",
+  "description" : "Feeling like Picsou ? Apply this gold paintjob to your Anaconda !",
+  "images": {
+    "thumbnail": "../../images/ship/Anaconda/paintjob1.png"
+  },
+  "price": 100000
+}

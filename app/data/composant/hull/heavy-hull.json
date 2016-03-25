@@ -1,0 +1,9 @@
+{
+  "name": "Military grade composite hull",
+  "description" : "Hardened structure and compounds offering superior protection against all types of attack",
+  "images": {
+    "thumbnail": "../../images/composant/hull-thumb.png"
+  },
+  "price": 100000,
+  "properties": "50% damage reduction against thermal and kinetic damage"
+}

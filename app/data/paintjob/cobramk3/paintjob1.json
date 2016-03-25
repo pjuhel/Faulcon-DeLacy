@@ -1,0 +1,8 @@
+{
+  "name": "Onionhead Livery Pack",
+  "description" : "Stylized green & black paintjob, do you feel the future ?",
+  "images": {
+    "thumbnail": "../../images/ship/CobraMk3/paintjob1.png"
+  },
+  "price": 10000
+}

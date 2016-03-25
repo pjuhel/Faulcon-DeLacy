@@ -1,0 +1,9 @@
+{
+  "name": "Class A Shield",
+  "description" : "Forms a continually regenerating protective energy shield around the vessel.",
+  "images": {
+    "thumbnail": "../../images/composant/shield-thumb.png"
+  },
+  "price": 100000,
+  "properties": "30% stronger than the default shield"
+}

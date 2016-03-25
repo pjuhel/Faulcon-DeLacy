@@ -1,0 +1,9 @@
+{
+  "name": "Class A Frame Shift Drive",
+  "description" : "Device that allows super cruise travel and hyperspace jumps between star systems.",
+  "images": {
+    "thumbnail": "../../images/composant/frameshift-thumb.png"
+  },
+  "price": 150000,
+  "properties": "add +50% range jump."
+}

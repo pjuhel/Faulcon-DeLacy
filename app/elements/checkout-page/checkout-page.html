@@ -53,7 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <h3>Total: {{total.accessories}}</h3>
       </div>
       <div class="card-actions">
-        <h2>Grand Total : {{total.grand}} CR</h2><div> <paper-button raised>Pay</paper-button></div>
+        <h2>Grand Total : {{total.grand}} CR</h2><div> <paper-button raised on-click="pay">Pay</paper-button></div>
       </div>
     </paper-card>
     <polymer-cookie
@@ -85,6 +85,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           this.total.grand=this.json.ship.price+this.total.accessories;
           this.notifyPath('total.grand', this.total.grand);
         }
+      },
+      pay: function(){
+        document.location.assign(app.baseUrl+"cashregister");
       },
       accessoriesToggle: function() {
         this.$.accessories.toggle();

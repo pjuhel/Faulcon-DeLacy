@@ -1,0 +1,8 @@
+{
+  "name": "Military Paint Pack",
+  "description" : "Show your fightinh skills with those tactical paintjob !",
+  "images": {
+    "thumbnail": "../../images/ship/Anaconda/paintjob2.png"
+  },
+  "price": 60000
+}

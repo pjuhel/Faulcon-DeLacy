@@ -1,0 +1,8 @@
+{
+  "name": "Tactical Paint Pack",
+  "description" : "Demonstrate your tactical sens with those tactical paintjob !",
+  "images": {
+    "thumbnail": "../../images/ship/SidewinderMkI/paintjob3.png"
+  },
+  "price": 60000
+}

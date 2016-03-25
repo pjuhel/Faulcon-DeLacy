@@ -1,0 +1,9 @@
+{
+  "name": "Class C Frame Shift Drive",
+  "description" : "Device that allows super cruise travel and hyperspace jumps between star systems.",
+  "images": {
+    "thumbnail": "../../images/composant/frameshift-thumb.png"
+  },
+  "price": 50000,
+  "properties": "add +10% range jump."
+}

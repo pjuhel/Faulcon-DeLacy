@@ -1,0 +1,8 @@
+{
+  "name": "Blue Paintjob",
+  "description" : "Classical blue paintjob with a sidestrip, so classy !",
+  "images": {
+    "thumbnail": "../../images/ship/ViperMk3/paintjob1.png"
+  },
+  "price": 10000
+}

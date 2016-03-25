@@ -1,0 +1,9 @@
+{
+  "name": "Advanced discovery scanner",
+  "description" : "The Discovery Scanner is a unit that fits inside of an internal compartment and allows you to scan for unknown astronomical objects within a certain radius of your ship.",
+  "images": {
+    "thumbnail": "../../images/composant/sensor-thumb.png"
+  },
+  "price": 1545000,
+  "properties": "Have a system-wide range"
+}

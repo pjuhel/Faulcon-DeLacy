@@ -1,0 +1,8 @@
+{
+  "name": "Male Pilot Bobblehead",
+  "description" : "What's better than a bobblehead on your ship's dashboard ?",
+  "images": {
+    "thumbnail": "../../images/accessories/pilot-male.png"
+  },
+  "price": 42
+}

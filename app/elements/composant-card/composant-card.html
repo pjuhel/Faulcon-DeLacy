@@ -1,0 +1,269 @@
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="..\..\bower_components/polymer/polymer.html">
+<link rel="import" href="..\..\bower_components/paper-material/paper-material.html">
+<link rel="import" href="..\..\bower_components/paper-card/paper-card.html">
+<link rel="import" href="..\..\bower_components/paper-button/paper-button.html">
+<link rel="import" href="..\..\bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="..\..\bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="..\..\bower_components/iron-image/iron-image.html">
+<link rel="import" href="..\..\bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="..\..\bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="..\..\bower_components/paper-dialog-scrollable/paper-dialog-scrollable.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/slide-right-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="..\..\bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="..\..\bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+<link rel="import" href="..\..\bower_components/polymer-cookie/polymer-cookie.html">
+
+<dom-module id="composant-card">
+  <template>
+      <style include="iron-flex iron-flex-alignment" is="custom-style">
+        :host {
+          display: inline-block;
+        }
+        .root {
+          border-radius: 2px;
+          height: 100%;
+          padding: 16px 0 16px 0;
+          width: calc(98.66%);
+          max-width: 640px;
+          margin: 16px auto;
+          background: white;
+        }
+        .thumbnail {
+          padding: 10px;
+          background-color: lightgray;
+          width: 640px;
+          height: 360px;
+        }
+        .schematic {
+          width: 1920px;
+          height: 1080px;
+          background-color: lightgray;
+        }
+        .card-actions {
+          @apply(--layout-horizontal);
+          @apply(--layout-justified);
+        }
+        .content-head {
+          @apply(--layout-horizontal);
+          @apply(--layout-justified);
+          @apply(--layout-center);
+        }
+        #sectionContent {
+          height: 200px;
+          overflow: auto;
+        }
+      </style>
+      <!-- Main Element -->
+      <paper-card image="{{composant.images.thumbnail}}" class="root" elevation="2">
+        <div class="card-content">
+          <div class="content-head" elevation="1">
+            <paper-icon-button id="back" icon="icons:arrow-back" on-click="previousContent"></paper-icon-button>
+            <h1 id="sectionTitle"></h1>
+            <paper-icon-button id="forward" icon="icons:arrow-forward" on-click="nextContent"></paper-icon-button>
+          </div>
+          <div id="sectionContent" elevation="0">
+          </div>
+        </div>
+        <div class="card-actions">
+          <paper-button>
+            <iron-icon icon="icons:info"></iron-icon>
+            More info
+          </paper-button>
+          <paper-button on-click="addToCart">
+            <iron-icon icon="icons:add-shopping-cart"></iron-icon>
+            Add to cart
+          </paper-button>
+        </div>
+      </paper-card>
+
+      <!-- Details Dialog -->
+      <div hidden="hidden" id="sectionTab">
+        <div>
+          <h1 class="sectionTitle">{{composant.name}}</h1>
+          <div class="sectionContent">
+            <p style="text-align: justify">{{composant.description}}</p>
+          </div>
+        </div>
+        <div>
+          <h1 class="sectionTitle">Overview</h1>
+          <div class="sectionContent">
+            <ul>
+              <li><h3>Price: {{composant.price}} CR</h3></li>
+              <li><h3>Component properties: {{composant.properties}}</h3></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <!-- Iron Ajax get the json used for the card. -->
+      <iron-ajax
+            id="ajax"
+            url=""
+            handle-as="json"
+            on-response="hresponse"
+            debounce-duration="300">
+      </iron-ajax>
+      <polymer-cookie
+        id="order_cookie"
+        name="order_cookie"
+        time=2
+        format="h">
+      </polymer-cookie>
+    </template>
+
+    <script>
+    (function() {
+      'use strict';
+      Polymer({
+        is: 'composant-card',
+        behaviors: [
+          Polymer.NeonAnimationRunnerBehavior
+        ],
+        ready: function() {
+          this.setajax();
+          this.selected=0;
+          this.updateContent();
+          this.animation=false;
+          this.cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+          this.input = this.cookie.readCookie();
+          if (this.input!="") {
+            this.json=JSON.parse(this.input);
+          }
+        },
+        setajax: function () {
+          this.$.ajax.url = this.url;
+          this.$.ajax.generateRequest();
+        },
+        addToCart: function () {
+          app.reload = true;
+          this.choice.name = this.composant.name;
+          this.choice.price = this.composant.price;
+          var params = {};
+          params.ship = this.json.ship;
+          params.accessories = [];
+          for(var i =0; i < this.json.accessories.length; i++)
+          {
+            params.accessories.push(this.json.accessories[i]);
+          }
+          params.accessories.push(this.choice)
+          app.checkout=params;
+          this.cookie = Polymer.dom(this.root).querySelector('#order_cookie');
+          this.cookie.value=JSON.stringify(params);
+          this.cookie.createCookie();
+          document.location.assign(app.baseUrl+"paintjob");
+        },
+        hresponse: function(request) {
+          this.composant = this.$.ajax.lastResponse;
+          this.updateContent();
+        },
+        nextContent: function() {
+          this.selected++;
+          this.animation=true;
+          this.playAnimation('out');
+
+        },
+        previousContent: function() {
+          this.selected--;
+          this.animation=true;
+          this.playAnimation('out');
+        },
+        updateContent: function () {
+          //Disable back if at the end
+          if(this.selected>0) {
+            this.$.back.disabled=false;
+          }
+          else {
+            this.$.back.disabled=true;
+          }
+          //Disable forward if at the top
+          if(this.selected<this.$.sectionTab.children.length-1) {
+            this.$.forward.disabled=false;
+          }
+          else {
+            this.$.forward.disabled=true;
+          }
+          //Change content & section title
+          this.$.sectionTitle.innerHTML=this.$.sectionTab.children[this.selected].querySelector('h1').innerHTML;
+          this.$.sectionContent.innerHTML=this.$.sectionTab.children[this.selected].querySelector('div').innerHTML;
+        },
+        properties: {
+          animationConfig: {
+            value: function() {
+              return {
+                // fade-in-animation is run with a 50ms delay from slide-down-animation
+                'out':
+                {
+                  name: 'fade-out-animation',
+                  node: this.$.sectionContent
+                },
+                'in':
+                {
+                  name: 'fade-in-animation',
+                  node: this.$.sectionContent
+                },
+              }
+            }
+          },
+          url: String,
+          composant: {
+            type: Object,
+            notify: true
+          },
+          cookie: {
+            type: Object,
+            notify: true
+          },
+          choice: {
+            type: Object,
+            notify: true,
+            value: {
+              "name":"test",
+              "price":0
+            },
+          },
+          input: {
+            type: String,
+            notify: true,
+            value : '{"ship": { "name": "Cobra MkIII", "description" : "The Cobra MkIII is a classic all purpose ship found throughout human space. The model was first built in Lave Cowell & MgRath shipyard in Lave in 3100. Despite its age it remains a popular ship for lone pilots who value its balance of carrying capacity and ability in combat.", "images": { "schematic": "../ship/CobraMk3/Schematic.png", "thumbnail": "../ship/CobraMk3/Thumb.png" }, "price": 379718, "insurance": 18985, "dimensions": { "length": 27.1, "width": 44.0, "height": 7.9 }, "speed": { "top": 286, "boost": 408 } },"accessories":[ {"name": "Shield","price": 424242}]}'
+          },
+          json: {
+            type: Object,
+            notify: true
+          },
+          selected: {
+            type: Number,
+            notify: true
+          },
+          animation: {
+            type: Boolean
+          }
+        },
+        listeners: {
+          'neon-animation-finish': '_onNeonAnimationFinish'
+        },
+        hide: function() {
+          // run fade-out-animation
+          this.playAnimation('exit');
+        },
+        _onNeonAnimationFinish: function() {
+          if (this.animation) {
+            this.updateContent();
+            this.playAnimation('in');
+            this.animation=false;
+          }
+        }
+      });
+    })();
+    </script>
+  </dom-module>

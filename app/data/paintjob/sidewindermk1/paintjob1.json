@@ -1,0 +1,8 @@
+{
+  "name": "Pirate Paintjob",
+  "description" : "Scare your opponents to the bone with this pirate themed paintjob !",
+  "images": {
+    "thumbnail": "../../images/ship/SidewinderMkI/paintjob1.png"
+  },
+  "price": 10000
+}

@@ -1,0 +1,9 @@
+{
+  "name": "Reinforced alloys hull",
+  "description" : "Advanced structure and compounds offer improved resistance against all types of attack.",
+  "images": {
+    "thumbnail": "../../images/composant/hull-thumb.png"
+  },
+  "price": 50000,
+  "properties": "25% damage reduction against thermal and kinetic damage"
+}
